@@ -11,11 +11,3 @@ have got there.  Not without fundamental restructuring of the walls.  So, either
 ### Reference:
 
 * *Adams, D. (1988) Dirk gently’s holistic detective agency. London: Pan Books in association with Heinemann.*
-
-
-<p>
-<body>
-<script src="js/three.min.js"></script>
-<script src="js/sofa.js"></script>
-</body>
-</p>
