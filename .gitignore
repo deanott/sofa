@@ -100,3 +100,6 @@ node_modules/
 
 #paper
 js/paper-full.js
+
+#threejs
+js/three.min.js
