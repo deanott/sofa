@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<!-- Load the Paper.js library -->
+<script type="text/javascript" src="js/paper-full.js"></script>
+<!-- Define inlined PaperScript associate it with myCanvas -->
+<script type="text/paperscript" canvas="canvas" src="js/sofa.js">
+</script>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+	<canvas id="canvas"></canvas>
+	<script>
+		var canvas = document.getElementById("canvas");
+		canvas.style.background = "#272822";
+		var ctx = canvas.getContext("2d");
+		ctx.canvas.width  = window.innerWidth;
+  	ctx.canvas.height = window.innerHeight;
+	</script>
+
+</head>
+
+</html>
