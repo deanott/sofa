@@ -2,26 +2,23 @@
 <html>
 
 <head>
-<!-- Load the Paper.js library -->
-<script type="text/javascript" src="js/three.min.js"></script>
+	<meta charset=utf-8>
+	<title>My first three.js app</title>
+	<style>
+		body {
+			margin: 0;
+		}
 
-<!-- Define inlined PaperScript associate it with myCanvas -->
-<script type="text/javascript" canvas="canvas" src="js/sofa.js">
-</script>
-
-<link rel="stylesheet" type="text/css" href="style.css">
+		canvas {
+			width: 100%;
+			height: 100%
+		}
+	</style>
 </head>
+
 <body>
-
-	<canvas id="canvas"></canvas>
-	<script>
-		var canvas = document.getElementById("canvas");
-		canvas.style.background = "#272822";
-		var ctx = canvas.getContext("2d");
-		ctx.canvas.width  = window.innerWidth;
-  	ctx.canvas.height = window.innerHeight;
-	</script>
+	<script src="js/three.min.js"></script>
+	<script src="js/sofa.js"></script>
 </body>
-</head>
 
 </html>
