@@ -14,9 +14,6 @@ var worldSize = {
 
 }
 
-
-
-
 var sofaSize = {
     width: 300,
     height: 75,
@@ -74,7 +71,7 @@ function createSofa(scene) {
     for (var i = 0; i < armRestSofaRight.vertices.length; i++) armRestSofaRight.vertices[i].z -= sofaSize.backDepth / 2;
 
     material = new THREE.MeshBasicMaterial({
-        color: 0xff0000,
+        color: 0x00ccff,
         wireframe: true
     });
 
@@ -103,7 +100,6 @@ function createSofa(scene) {
 
 ///Source: https://gist.github.com/cowboyd/9529745
 function createStairs(scene) {
-
     // MATERIALS
     var stepMaterialVertical = new THREE.MeshLambertMaterial({
         color: 0xA85F35
@@ -165,7 +161,6 @@ function moveObject(obj) {
         obj.position.y > worldSize.height - sofaSize.width) {
         obj.direction.y = -obj.direction.y ;
     }
-
 }
 
 function animate() {
