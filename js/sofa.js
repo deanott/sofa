@@ -1,10 +1,15 @@
 /*Logic to remove sofa from stairway*/
 
-var sofaDimensions = {
+var sofaSize = {
   width: 300,
   height: 100,
   depth: 100,
-  sideRestHeight: 40
+
+  armWidth: 40,
+  armHeight: 140,
+
+  backHeight: 150,
+  backDepth: 20
 }
 
 var camera, scene, renderer;
@@ -20,16 +25,50 @@ function init() {
 
     scene = new THREE.Scene();
 
-    mainSofa = new THREE.BoxGeometry(sofaDimensions.width, sofaDimensions.height, sofaDimensions.depth);
-    mainSofa.vertices
+    sofa = new THREE.Geometry();
+
+    coreSofa = new THREE.BoxGeometry(sofaSize.width, sofaSize.height, sofaSize.depth);
+    backRestSofa = new THREE.BoxGeometry(sofaSize.width,sofaSize.backHeight,sofaSize.backDepth);
+    armRestSofaLeft = new THREE.BoxGeometry(sofaSize.armWidth,sofaSize.armHeight,sofaSize.depth);
+    armRestSofaRight = new THREE.BoxGeometry(sofaSize.armWidth,sofaSize.armHeight,sofaSize.depth);
+
+    //Offset back
+    for(var i = 0 ; i < backRestSofa.vertices.length; i++) backRestSofa.vertices[i].z -= sofaSize.depth/2 + sofaSize.backDepth/2;
+    for(var i = 0 ; i < backRestSofa.vertices.length; i++) backRestSofa.vertices[i].y -= sofaSize.height/2 - sofaSize.backHeight/2;
+
+    //Offset Rests
+    for(var i = 0 ; i < backRestSofa.vertices.length; i++) backRestSofa.vertices[i].y -=  sofaSize.height/2 - sofaSize.armHeight/2;
+    for(var i = 0 ; i < backRestSofa.vertices.length; i++) backRestSofa.vertices[i].x -=  sofaSize.width/2 - sofaSize.armWidth/2;
+
 
     material = new THREE.MeshBasicMaterial({
         color: 0xff0000,
         wireframe: true
     });
 
-    mesh = new THREE.Mesh(geometry, material);
+    meshCore = new THREE.Mesh(coreSofa, material);
+    meshBack = new THREE.Mesh(backRestSofa, material);
+
+
+    meshRestLeft = new THREE.Mesh(armRestSofa, material);
+
+
+    sofa.merge(meshCore.geometry, meshCore.matrix);
+
+    sofa.merge(meshBack.geometry, meshBack.matrix);
+
+    mesh = new THREE.Mesh(sofa, material);
     scene.add(mesh);
+
+    //
+    // mesh = new THREE.Mesh(backRestSofa, material);
+    // scene.add(mesh);
+    //
+    //
+    // mesh = new THREE.Mesh(armRestSofa, material);
+    // scene.add(mesh);
+
+
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -42,8 +81,8 @@ function animate() {
 
     requestAnimationFrame(animate);
 
-    mesh.rotation.x += 0.01;
-    mesh.rotation.y += 0.02;
+    mesh.rotation.x += 0.005;
+    mesh.rotation.y += 0.01;
 
     renderer.render(scene, camera);
 
