@@ -1,8 +1,9 @@
 /*Logic to remove sofa from stairway*/
 
-var sofaDimensins = {
+var sofaDimensions = {
   width: 300,
   height: 100,
+  depth: 100,
   sideRestHeight: 40
 }
 
@@ -19,7 +20,9 @@ function init() {
 
     scene = new THREE.Scene();
 
-    geometry = new THREE.BoxGeometry(sofaDimensins, 200, 200);
+    mainSofa = new THREE.BoxGeometry(sofaDimensions.width, sofaDimensions.height, sofaDimensions.depth);
+    mainSofa.vertices
+
     material = new THREE.MeshBasicMaterial({
         color: 0xff0000,
         wireframe: true
