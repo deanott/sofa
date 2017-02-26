@@ -7,6 +7,16 @@ var gridZ = false;
 var axes = false;
 var ground = true;
 
+var worldSize = {
+    width: 500,
+    height: 500,
+    depth: 100
+
+}
+
+
+
+
 var sofaSize = {
     width: 300,
     height: 75,
@@ -31,23 +41,15 @@ function init() {
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = 1000;
 
-
-
     scene = new THREE.Scene();
 
-    //createSofa(scene);
-    createStairs(scene);
-
+    createSofa(scene);
+    //createStairs(scene);
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // CONTROLS
-  cameraControls = new THREE.OrbitAndPanControls(camera, renderer.domElement);
-  cameraControls.target.set(0,600,0);
-
     document.body.appendChild(renderer.domElement);
-
 }
 
 function createSofa(scene) {
@@ -87,6 +89,13 @@ function createSofa(scene) {
     sofa.merge(meshRestRight.geometry, armRestSofaRight.matrix);
 
     meshSofa = new THREE.Mesh(sofa, material);
+
+    //add mesh direction
+    meshSofa.direction = {
+        x: 3,
+        y: 3
+    }
+
     scene.add(meshSofa);
 
 
@@ -141,24 +150,28 @@ function createStairs(scene) {
     }
 }
 
-function animate() {
 
-    requestAnimationFrame(animate);
+function moveObject(obj) {
+    obj.position.x += obj.direction.x;
+    obj.position.y += obj.direction.y ;
 
-    //meshSofa.rotation.x += 0.005;
-    //meshSofa.rotation.y += 0.01;
-    var delta = clock.getDelta();
-    	cameraControls.update(delta);
-    	if ( effectController.newGridX !== gridX || effectController.newGridY !== gridY || effectController.newGridZ !== gridZ || effectController.newGround !== ground || effectController.newAxes !== axes)
-    	{
-    		gridX = effectController.newGridX;
-    		gridY = effectController.newGridY;
-    		gridZ = effectController.newGridZ;
-    		ground = effectController.newGround;
-    		axes = effectController.newAxes;
-
-    		fillScene();
+    // if edge is reached, bounce back
+    if (obj.position.x < -worldSize.width + sofaSize.width ||
+        obj.position.x > worldSize.width - sofaSize.width) {
+        obj.direction.x = -obj.direction.x ;
     }
-    renderer.render(scene, camera);
 
+    if (obj.position.y < -worldSize.height +sofaSize.width ||
+        obj.position.y > worldSize.height - sofaSize.width) {
+        obj.direction.y = -obj.direction.y ;
+    }
+
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    meshSofa.rotation.x += 0.005;
+    meshSofa.rotation.y += 0.01;
+    moveObject(meshSofa);
+    renderer.render(scene, camera);
 }
