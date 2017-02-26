@@ -1,5 +1,12 @@
 /*Logic to remove sofa from stairway*/
 
+var clock = new THREE.Clock();
+var gridX = false;
+var gridY = false;
+var gridZ = false;
+var axes = false;
+var ground = true;
+
 var sofaSize = {
     width: 300,
     height: 75,
@@ -14,6 +21,7 @@ var sofaSize = {
 
 var camera, scene, renderer;
 var geometry, material, mesh;
+var cameraControls, effectController;
 
 init();
 animate();
@@ -23,6 +31,8 @@ function init() {
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = 1000;
 
+
+
     scene = new THREE.Scene();
 
     //createSofa(scene);
@@ -31,6 +41,10 @@ function init() {
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // CONTROLS
+  cameraControls = new THREE.OrbitAndPanControls(camera, renderer.domElement);
+  cameraControls.target.set(0,600,0);
 
     document.body.appendChild(renderer.domElement);
 
@@ -133,7 +147,18 @@ function animate() {
 
     //meshSofa.rotation.x += 0.005;
     //meshSofa.rotation.y += 0.01;
+    var delta = clock.getDelta();
+    	cameraControls.update(delta);
+    	if ( effectController.newGridX !== gridX || effectController.newGridY !== gridY || effectController.newGridZ !== gridZ || effectController.newGround !== ground || effectController.newAxes !== axes)
+    	{
+    		gridX = effectController.newGridX;
+    		gridY = effectController.newGridY;
+    		gridZ = effectController.newGridZ;
+    		ground = effectController.newGround;
+    		axes = effectController.newAxes;
 
+    		fillScene();
+    }
     renderer.render(scene, camera);
 
 }
