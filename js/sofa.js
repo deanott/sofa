@@ -89,8 +89,9 @@ function createSofa(scene) {
 
     //add mesh direction
     meshSofa.direction = {
-        x: 3,
-        y: 3
+        x: 2,
+        y: 2,
+        z: 4
     }
 
     scene.add(meshSofa);
@@ -150,17 +151,23 @@ function createStairs(scene) {
 function moveObject(obj) {
     obj.position.x += obj.direction.x;
     obj.position.y += obj.direction.y ;
-
+    obj.position.z += obj.direction.z;
     // if edge is reached, bounce back
-    if (obj.position.x < -worldSize.width + sofaSize.width ||
-        obj.position.x > worldSize.width - sofaSize.width) {
+    if (obj.position.x < -worldSize.width + sofaSize.width/2 ||
+        obj.position.x > worldSize.width - sofaSize.width/2) {
         obj.direction.x = -obj.direction.x ;
     }
 
-    if (obj.position.y < -worldSize.height +sofaSize.width ||
-        obj.position.y > worldSize.height - sofaSize.width) {
+    if (obj.position.y < -worldSize.height +sofaSize.width/2 ||
+        obj.position.y > worldSize.height - sofaSize.width/2) {
         obj.direction.y = -obj.direction.y ;
     }
+
+    if (obj.position.z < -worldSize.width - 10000 + sofaSize.width/2 ||
+        obj.position.z > worldSize.width + 1000 - sofaSize.width/2) {
+        obj.direction.z = -obj.direction.z ;
+    }
+
 }
 
 function animate() {
