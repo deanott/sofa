@@ -109,11 +109,10 @@ function specialStairs(scene){
 
   var stepWidth = sofaSize.width -0.1; //only just!
   var stepSize = sofaSize.armHeight;
-  var stepThickness = 50;
+  var stepThickness = 87;
 
   // height from top of one step to bottom of next step up
-  var verticalStepHeight = stepSize;
-  var horizontalStepDepth = stepSize * 4;
+  var verticalStepHeight = stepSize/2;
 
   var stepHalfThickness = stepThickness / 2;
   var steps = new THREE.Geometry();
@@ -121,21 +120,43 @@ function specialStairs(scene){
   var offsetX = 0;
   var offsetY = 0;
   var offsetZ = 0;
-  for (var i = 0; i < 4; i++) {
+
+  //Vertical stairs
+  for (var i = 0; i < 5; i++) {
     var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness);
     // Make and position the vertical part of the step
     stepGen = new THREE.Mesh(stepVertical, material);
     stepGen.geometry.translate(offsetX,offsetY,offsetZ);
     //Increase offset
     offsetY += verticalStepHeight;
-    offsetZ -= verticalStepHeight;
+    offsetZ -= stepThickness;
     steps.merge(stepGen.geometry, stepGen.matrix);
   }
 
+  //TODO: turn in stiars plate
+  var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness*2);
+  stepGen = new THREE.Mesh(stepVertical, material);
+  stepGen.geometry.translate(offsetX,offsetY,offsetZ);
+  steps.merge(stepGen.geometry, stepGen.matrix);
+  offsetY += verticalStepHeight;
+  offsetZ -= stepThickness;
+
+  //Horizontal stairs - just adding some roationa
+  for (var i = 0; i < 10; i++) {
+      var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness);
+      // Make and position the vertical part of the step
+      stepGen = new THREE.Mesh(stepVertical, material);
+      stepGen.geometry.translate(offsetX,offsetY,offsetZ);
+      stepGen.geometry.rotateY(-Math.PI /2);
+      //Increase offset
+      offsetY += verticalStepHeight;
+      offsetZ -= stepThickness;
+      steps.merge(stepGen.geometry, stepGen.matrix);
+  }
   stepMesh = new THREE.Mesh(steps, material);
 
   //centering the stairs
-  stepMesh.geometry.translate( -window.innerWidth/2,1,1);
+  stepMesh.geometry.translate(-window.innerWidth/2,-window.innerHeight/2,0);
   scene.add(stepMesh);
 }
 
