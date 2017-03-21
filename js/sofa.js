@@ -134,6 +134,8 @@ function specialStairs(scene){
 
   stepMesh = new THREE.Mesh(steps, material);
 
+  //centering the stairs
+  stepMesh.geometry.translate( -window.innerWidth/2,1,1);
   scene.add(stepMesh);
 }
 
