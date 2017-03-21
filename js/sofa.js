@@ -41,7 +41,7 @@ function init() {
     scene = new THREE.Scene();
 
     createSofa(scene);
-    //createStairs(scene);
+    specialStairs(scene);
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -96,61 +96,50 @@ function createSofa(scene) {
 
     scene.add(meshSofa);
 
-
 }
 
-///Source: https://gist.github.com/cowboyd/9529745
-function createStairs(scene) {
-    // MATERIALS
-    var stepMaterialVertical = new THREE.MeshLambertMaterial({
-        color: 0xA85F35
-    });
-    var stepMaterialHorizontal = new THREE.MeshLambertMaterial({
-        color: 0xBC7349
-    });
+function specialStairs(scene){
+  // MATERIALS
 
-    var stepWidth = 500;
-    var stepSize = 200;
-    var stepThickness = 50;
-    // height from top of one step to bottom of next step up
-    var verticalStepHeight = stepSize;
-    var horizontalStepDepth = stepSize * 2;
+  material = new THREE.MeshBasicMaterial({
+    color: 0x00cdef,
+    wireframe: true
+  });
 
-    var stepHalfThickness = stepThickness / 2;
 
-    // +Y direction is up
-    // Define the two pieces of the step, vertical and horizontal
-    // THREE.CubeGeometry takes (width, height, depth)
+  var stepWidth = sofaSize.width -0.1; //only just!
+  var stepSize = sofaSize.armHeight;
+  var stepThickness = 50;
+
+  // height from top of one step to bottom of next step up
+  var verticalStepHeight = stepSize;
+  var horizontalStepDepth = stepSize * 4;
+
+  var stepHalfThickness = stepThickness / 2;
+  var steps = new THREE.Geometry();
+
+  var offsetX = 0;
+  var offsetY = 0;
+  var offsetZ = 0;
+  for (var i = 0; i < 4; i++) {
     var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness);
-    var stepHorizontal = new THREE.CubeGeometry(stepWidth, stepThickness, horizontalStepDepth);
-    var stepMesh;
-    for (var i = 0; i < 6; i++) {
-        var offsetY = i * (verticalStepHeight + stepThickness);
-        var offsetZ = i * (horizontalStepDepth - stepThickness);
-        // Make and position the vertical part of the step
-        stepMesh = new THREE.Mesh(stepVertical, stepMaterialVertical);
-        // The position is where the center of the block will be put.
-        // You can define position as THREE.Vector3(x, y, z) or in the following way:
-        stepMesh.position.x = 0; // centered at origin
-        stepMesh.position.y = verticalStepHeight / 2 + offsetY; // half of height: put it above ground plane
-        stepMesh.position.z = offsetZ; // centered at origin
-        scene.add(stepMesh);
+    // Make and position the vertical part of the step
+    stepGen = new THREE.Mesh(stepVertical, material);
+    stepGen.geometry.translate(offsetX,offsetY,offsetZ);
+    //Increase offset
+    offsetY += verticalStepHeight;
+    offsetZ -= verticalStepHeight;
+    steps.merge(stepGen.geometry, stepGen.matrix);
+  }
 
-        // Make and position the horizontal part
-        stepMesh = new THREE.Mesh(stepHorizontal, stepMaterialHorizontal);
-        stepMesh.position.x = 0;
-        // Push up by half of horizontal step's height, plus vertical step's height
-        stepMesh.position.y = stepThickness / 2 + verticalStepHeight + offsetY;
-        // Push step forward by half the depth, minus half the vertical step's thickness
-        stepMesh.position.z = horizontalStepDepth / 2 - stepHalfThickness + offsetZ;
-        scene.add(stepMesh);
-    }
+  stepMesh = new THREE.Mesh(steps, material);
+
+  scene.add(stepMesh);
 }
-
 
 function moveObject(obj) {
     obj.position.x += obj.direction.x;
-    obj.position.y += obj.direction.y ;
+    obj.position.y += obj.direction.y;
     obj.position.z += obj.direction.z;
     // if edge is reached, bounce back
     if (obj.position.x < -worldSize.width + sofaSize.width/2 ||
