@@ -122,7 +122,7 @@ function specialStairs(scene){
   var offsetZ = 0;
 
   //Vertical stairs
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 10; i++) {
     var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness);
     // Make and position the vertical part of the step
     stepGen = new THREE.Mesh(stepVertical, material);
@@ -134,33 +134,45 @@ function specialStairs(scene){
   }
 
   //TODO: turn in stiars plate
-  var sideStepThickness = stepThickness*2;
+  var sideStepThickness = stepWidth;
   var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, sideStepThickness);
   stepGen = new THREE.Mesh(stepVertical, material);
   offsetZ -= (sideStepThickness - stepThickness )/2;
   stepGen.geometry.translate(offsetX,offsetY, offsetZ);
   steps.merge(stepGen.geometry, stepGen.matrix);
   offsetY += verticalStepHeight;
-  offsetZ -= (sideStepThickness + stepThickness )/2;
+  //offsetZ -= (sideStepThickness + stepThickness )/2;
+
+  //INtial stair offset
+  offsetX += stepWidth/2 + stepThickness/2;
 
   //Horizontal stairs - just adding some roationa
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 10; i++) {
       var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness);
+      var stepHorizontal = new THREE.CubeGeometry(stepWidth,verticalStepHeight,stepThickness);
       // Make and position the vertical part of the step
-      stepGen = new THREE.Mesh(stepVertical, material);
+      stepGen = new THREE.Mesh(stepHorizontal, material);
+
+      stepGen.geometry.rotateY(-Math.PI /2);// TODO: roatte but keep offset
       stepGen.geometry.translate(offsetX,offsetY,offsetZ);
+      steps.merge(stepGen.geometry, stepGen.matrix);
+
+
 
       //Increase offset
       offsetY += verticalStepHeight;
       offsetZ -= stepThickness;
-      //stepGen.geometry.rotateY(-Math.PI /2);// TODO: roatte but keep offset
-
-      steps.merge(stepGen.geometry, stepGen.matrix);
+      offsetX += stepThickness;
   }
   stepMesh = new THREE.Mesh(steps, material);
-
+  //add mesh direction
+  stepMesh.direction = {
+      x: 0.01,
+      y: 0.01,
+      z: 0.01
+  }
   //centering the stairs
-  stepMesh.geometry.translate(-window.innerWidth/2,-window.innerHeight/2,0);
+  stepMesh.geometry.translate(-window.innerWidth/2 + 200,-window.innerHeight/2 +100 ,0);
   scene.add(stepMesh);
 }
 
@@ -190,6 +202,13 @@ function animate() {
     requestAnimationFrame(animate);
     meshSofa.rotation.x += 0.005;
     meshSofa.rotation.y += 0.01;
+    meshSofa.rotation.z -= 0.02;
     moveObject(meshSofa);
+
+
+    stepMesh.rotation.x += 0.0001;
+    stepMesh.rotation.y -= 0.0001;
+    stepMesh.rotation.z -= 0.0001;
+    moveObject(stepMesh)
     renderer.render(scene, camera);
 }
