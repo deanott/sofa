@@ -134,23 +134,27 @@ function specialStairs(scene){
   }
 
   //TODO: turn in stiars plate
-  var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness*2);
+  var sideStepThickness = stepThickness*2;
+  var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, sideStepThickness);
   stepGen = new THREE.Mesh(stepVertical, material);
-  stepGen.geometry.translate(offsetX,offsetY,offsetZ);
+  offsetZ -= (sideStepThickness - stepThickness )/2;
+  stepGen.geometry.translate(offsetX,offsetY, offsetZ);
   steps.merge(stepGen.geometry, stepGen.matrix);
   offsetY += verticalStepHeight;
-  offsetZ -= stepThickness;
+  offsetZ -= (sideStepThickness + stepThickness )/2;
 
   //Horizontal stairs - just adding some roationa
-  for (var i = 0; i < 10; i++) {
+  for (var i = 0; i < 5; i++) {
       var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness);
       // Make and position the vertical part of the step
       stepGen = new THREE.Mesh(stepVertical, material);
       stepGen.geometry.translate(offsetX,offsetY,offsetZ);
-      stepGen.geometry.rotateY(-Math.PI /2);
+
       //Increase offset
       offsetY += verticalStepHeight;
       offsetZ -= stepThickness;
+      //stepGen.geometry.rotateY(-Math.PI /2);// TODO: roatte but keep offset
+
       steps.merge(stepGen.geometry, stepGen.matrix);
   }
   stepMesh = new THREE.Mesh(steps, material);
