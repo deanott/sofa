@@ -27,10 +27,10 @@ var sofaSize = {
 }
 
 var camera, scene, renderer;
+var controls;
 var geometry, material_steps, mesh;
 var cameraControls, effectController;
 
-var controls = new THREE.OrbitControls( camera );
 
 
 init();
@@ -40,6 +40,8 @@ function init() {
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = 1000;
+
+    controls = new THREE.OrbitControls( camera );
 
     scene = new THREE.Scene();
 
@@ -294,27 +296,27 @@ function moveObject(obj) {
 
 function animate() {
     requestAnimationFrame(animate);
-    meshSofa.rotation.x += 0.005;
-    meshSofa.rotation.y += 0.01;
-    meshSofa.rotation.z -= 0.02;
-    moveObject(meshSofa);
+    // meshSofa.rotation.x += 0.005;
+    // meshSofa.rotation.y += 0.01;
+    // meshSofa.rotation.z -= 0.02;
+    // moveObject(meshSofa);
 
 
-    stepMesh.rotation.x -= 0.001;
-    stepMesh.rotation.y -= 0.001;
-    stepMesh.rotation.z -= 0.001;
+    // stepMesh.rotation.x -= 0.001;
+    // stepMesh.rotation.y -= 0.001;
+    // stepMesh.rotation.z -= 0.001;
     
-    wall_l_mesh.rotation.x -= 0.001;
-    wall_l_mesh.rotation.y -= 0.001;
-    wall_l_mesh.rotation.z -= 0.001;
+    // wall_l_mesh.rotation.x -= 0.001;
+    // wall_l_mesh.rotation.y -= 0.001;
+    // wall_l_mesh.rotation.z -= 0.001;
 
-    wall_r_mesh.rotation.x -= 0.001;
-    wall_r_mesh.rotation.y -= 0.001;
-    wall_r_mesh.rotation.z -= 0.001;
+    // wall_r_mesh.rotation.x -= 0.001;
+    // wall_r_mesh.rotation.y -= 0.001;
+    // wall_r_mesh.rotation.z -= 0.001;
 
-    wall_b_mesh.rotation.x -= 0.001;
-    wall_b_mesh.rotation.y -= 0.001;
-    wall_b_mesh.rotation.z -= 0.001;
+    // wall_b_mesh.rotation.x -= 0.001;
+    // wall_b_mesh.rotation.y -= 0.001;
+    // wall_b_mesh.rotation.z -= 0.001;
     
     
     //moveObject(stepMesh)
