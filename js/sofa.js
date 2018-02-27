@@ -27,7 +27,7 @@ var sofaSize = {
 }
 
 var camera, scene, renderer;
-var geometry, material, mesh;
+var geometry, material_steps, mesh;
 var cameraControls, effectController;
 
 init();
@@ -41,7 +41,7 @@ function init() {
     scene = new THREE.Scene();
 
     createSofa(scene);
-    specialStairs(scene);
+    specialStairs(scene, 87);
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -70,22 +70,22 @@ function createSofa(scene) {
     for (var i = 0; i < armRestSofaRight.vertices.length; i++) armRestSofaRight.vertices[i].x += sofaSize.width / 2 + sofaSize.armWidth / 2;
     for (var i = 0; i < armRestSofaRight.vertices.length; i++) armRestSofaRight.vertices[i].z -= sofaSize.backDepth / 2;
 
-    material = new THREE.MeshBasicMaterial({
+    material_steps = new THREE.MeshBasicMaterial({
         color: 0x00ccff,
         wireframe: true
     });
 
-    meshCore = new THREE.Mesh(coreSofa, material);
-    meshBack = new THREE.Mesh(backRestSofa, material);
-    meshRestLeft = new THREE.Mesh(armRestSofaLeft, material);
-    meshRestRight = new THREE.Mesh(armRestSofaRight, material);
+    meshCore = new THREE.Mesh(coreSofa, material_steps);
+    meshBack = new THREE.Mesh(backRestSofa, material_steps);
+    meshRestLeft = new THREE.Mesh(armRestSofaLeft, material_steps);
+    meshRestRight = new THREE.Mesh(armRestSofaRight, material_steps);
 
     sofa.merge(meshCore.geometry, meshCore.matrix);
     sofa.merge(meshBack.geometry, meshBack.matrix);
     sofa.merge(meshRestLeft.geometry, meshRestLeft.matrix);
     sofa.merge(meshRestRight.geometry, armRestSofaRight.matrix);
 
-    meshSofa = new THREE.Mesh(sofa, material);
+    meshSofa = new THREE.Mesh(sofa, material_steps);
 
     //add mesh direction
     meshSofa.direction = {
@@ -98,18 +98,27 @@ function createSofa(scene) {
 
 }
 
-function specialStairs(scene){
+function createWalls(scene, wallHeight, wallThickness, stepThickness) {
+    new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness);
+
+}
+
+function specialStairs(scene, stepThickness){
   // MATERIALS
 
-  material = new THREE.MeshBasicMaterial({
+  material_steps = new THREE.MeshBasicMaterial({
     color: 0x00cdef,
+    wireframe: true
+  });
+
+  material_wall = new THREE.MeshBasicMaterial({
+    color: 0xFFFF00,
     wireframe: true
   });
 
 
   var stepWidth = sofaSize.width -0.1; //only just!
   var stepSize = sofaSize.armHeight;
-  var stepThickness = 87;
 
   // height from top of one step to bottom of next step up
   var verticalStepHeight = stepSize/2;
@@ -121,11 +130,12 @@ function specialStairs(scene){
   var offsetY = 0;
   var offsetZ = 0;
 
+  var number_of_steps= 20;
   //Vertical stairs
-  for (var i = 0; i < 10; i++) {
+  for (var i = 0; i < number_of_steps/2; i++) {
     var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness);
     // Make and position the vertical part of the step
-    stepGen = new THREE.Mesh(stepVertical, material);
+    stepGen = new THREE.Mesh(stepVertical, material_steps);
     stepGen.geometry.translate(offsetX,offsetY,offsetZ);
     //Increase offset
     offsetY += verticalStepHeight;
@@ -133,10 +143,13 @@ function specialStairs(scene){
     steps.merge(stepGen.geometry, stepGen.matrix);
   }
 
+
+
+
   //TODO: turn in stiars plate
   var sideStepThickness = stepWidth;
   var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, sideStepThickness);
-  stepGen = new THREE.Mesh(stepVertical, material);
+  stepGen = new THREE.Mesh(stepVertical, material_steps);
   offsetZ -= (sideStepThickness - stepThickness )/2;
   stepGen.geometry.translate(offsetX,offsetY, offsetZ);
   steps.merge(stepGen.geometry, stepGen.matrix);
@@ -147,11 +160,11 @@ function specialStairs(scene){
   offsetX += stepWidth/2 + stepThickness/2;
 
   //Horizontal stairs - just adding some roationa
-  for (var i = 0; i < 10; i++) {
+  for (var i = 0; i <  number_of_steps/2; i++) {
       var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness);
       var stepHorizontal = new THREE.CubeGeometry(stepWidth,verticalStepHeight,stepThickness);
       // Make and position the vertical part of the step
-      stepGen = new THREE.Mesh(stepHorizontal, material);
+      stepGen = new THREE.Mesh(stepHorizontal, material_steps);
 
       stepGen.geometry.rotateY(-Math.PI /2);// TODO: roatte but keep offset
       stepGen.geometry.translate(offsetX,offsetY,offsetZ);
@@ -164,16 +177,53 @@ function specialStairs(scene){
       offsetZ -= stepThickness;
       offsetX += stepThickness;
   }
-  stepMesh = new THREE.Mesh(steps, material);
+
+  stepMesh = new THREE.Mesh(steps, material_steps);
   //add mesh direction
   stepMesh.direction = {
       x: 0.01,
       y: 0.01,
       z: 0.01
   }
+
+  var steps_x_start = -window.innerWidth/2 + 200;
+  var steps_y_start = -window.innerHeight/2 +100;
+  var steps_z_start = -100
+
   //centering the stairs
-  stepMesh.geometry.translate(-window.innerWidth/2 + 200,-window.innerHeight/2 +100 ,0);
+  stepMesh.geometry.translate(steps_x_start, steps_y_start, steps_z_start);
   scene.add(stepMesh);
+
+
+  /*Corresponding walls */
+  
+  let wall_height = number_of_steps * verticalStepHeight
+  
+
+  var wall_l = new THREE.CubeGeometry(0, wall_height, number_of_steps * stepThickness);
+  
+  console.log(wall_l)
+
+  wallMesh = new THREE.Mesh(wall_l, material_wall);
+  //add mesh direction
+  wallMesh.direction = {
+      x: 0.01,
+      y: 0.01,
+      z: 0.01
+  }
+  
+  wall_l_x_offset = - stepWidth / 2;
+  wall_l_y_offset = wall_height / 2    -  verticalStepHeight/2;
+  wall_l_z_offset =  - number_of_steps/2 * stepThickness       + stepThickness/2;
+
+  wallMesh.geometry.translate(steps_x_start + wall_l_x_offset, steps_y_start + wall_l_y_offset, steps_z_start + wall_l_z_offset);
+  scene.add(wallMesh);
+
+
+
+
+
+
 }
 
 function moveObject(obj) {
@@ -206,9 +256,13 @@ function animate() {
     moveObject(meshSofa);
 
 
-    stepMesh.rotation.x += 0.0001;
-    stepMesh.rotation.y -= 0.0001;
-    stepMesh.rotation.z -= 0.0001;
-    moveObject(stepMesh)
+    stepMesh.rotation.x -= 0.001;
+    stepMesh.rotation.y -= 0.001;
+    stepMesh.rotation.z -= 0.001;
+    
+    wallMesh.rotation.x -= 0.001;
+    wallMesh.rotation.y -= 0.001;
+    wallMesh.rotation.z -= 0.001;
+    //moveObject(stepMesh)
     renderer.render(scene, camera);
 }
