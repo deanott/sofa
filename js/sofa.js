@@ -178,7 +178,6 @@ function specialStairs(scene, stepThickness){
 
       //Increase offset
       offsetY += verticalStepHeight;
-      offsetZ -= stepThickness;
       offsetX += stepThickness;
   }
 
