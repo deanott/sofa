@@ -32,8 +32,9 @@ var geometry, material_steps, mesh;
 var cameraControls, effectController;
 
 
-collidableMeshList = []
+collidableMeshList = [];
 
+var sofa_origin_position;
 
 init();
 animate();
@@ -103,6 +104,8 @@ function createSofa(scene) {
     
     scene.add(meshSofa);
 
+    /*STORE ORIGNAL SOFA POSITION */
+    sofa_origin_position = meshSofa.position.clone();
 }
 
 
@@ -290,6 +293,7 @@ function moveObject(obj) {
 }
 
 
+
 function animate() {
     requestAnimationFrame(animate);
     meshSofa.rotation.x += 0.005;
@@ -339,6 +343,7 @@ function animate() {
 		var collisionResults = ray.intersectObjects( collidableMeshList );
 		if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
             console.log("HIT")
+            meshSofa.position = sofa_origin_position;
         }
 			
 	}	
