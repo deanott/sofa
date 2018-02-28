@@ -332,7 +332,20 @@ function moveObject(obj) {
 
 
 
+function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds) {
+            break;
+        }
+    }
+}
+
+
 var text_alert_ticker = 0;
+
+
+var history_of_moves = []
 
 
 function animate() {
@@ -342,7 +355,9 @@ function animate() {
     meshSofa.rotation.z += 0.02;
     moveObject(meshSofa);
 
-
+    //Gulp store that history for deep learning feed
+    history_of_moves.push({"rotation":meshSofa.rotation}, {"position": meshSofa.position })
+    // console.log(history_of_moves)
     // stepMesh.rotation.x -= 0.001;
     // stepMesh.rotation.y -= 0.001;
     // stepMesh.rotation.z -= 0.001;
@@ -385,14 +400,16 @@ function animate() {
             console.log("HIT")
 
 
-            // meshSofa.position.x = sofa_origin_position.x;
-            // meshSofa.position.y = sofa_origin_position.y;
-            // meshSofa.position.z = sofa_origin_position.z;
-
             var centerTextOffset = -0.5 * (text_alert.geometry.boundingBox.max.x - text_alert.geometry.boundingBox.min.x);
 
             text_alert.position.x = centerTextOffset;
-            text_alert.lookAt( camera.position );
+            text_alert.lookAt(camera.position);
+           
+         
+            // meshSofa.position.x = sofa_origin_position.x;
+            // meshSofa.position.y = sofa_origin_position.y;
+            // meshSofa.position.z = sofa_origin_position.z;
+            
 
         } else {
             text_alert.position.x = -100000;
@@ -403,7 +420,7 @@ function animate() {
 
 
 
-    
+
 
 
     controls.update();
