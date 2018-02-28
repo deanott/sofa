@@ -11,7 +11,7 @@
 			margin: 0;
 			overflow: hidden;
 			font: courier;
-			background-color:#000000 ;
+			background-color: #000000;
 		}
 
 		canvas {
@@ -43,6 +43,24 @@
 			transform: translate(-50%, -50%);
 			-ms-transform: translate(-50%, -50%);
 		}
+
+		#info-button {
+			position: absolute;
+
+			padding: 20px;
+
+			font-size: 1.5em;
+			background-color: Transparent;
+			color: white;
+			background-repeat: no-repeat;
+			border: none;
+			cursor: pointer;
+			overflow: hidden;
+			outline: none;
+
+
+
+		}
 	</style>
 </head>
 
@@ -61,7 +79,7 @@
 			or there’s something wrong with the program. Which would you guess?</div>
 	</div>
 
-	<button onclick="on()"> ?</button>
+	<button id="info-button" onclick="on()"> ?</button>
 
 	<script>
 		function on() {
@@ -72,7 +90,7 @@
 			document.getElementById("overlay").style.display = "none";
 		}
 	</script>
-	
+
 </body>
 
 </html>
