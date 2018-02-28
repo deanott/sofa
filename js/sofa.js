@@ -32,43 +32,44 @@ var geometry, material_steps, mesh;
 var cameraControls, effectController;
 var font;
 
-var text_alert = null;
+var text_alert;
 
 collidableMeshList = [];
 
 var sofa_origin_position;
 
 var loader = new THREE.FontLoader();
-loader.load( 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_bold.typeface.json', function ( font ) {
-    init( font );
+loader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+    init(font);
     animate();
-} );
+});
 
-function create_text(text, font) {
+function create_text(textMesh, font) {
 
-	var geometry = new THREE.TextGeometry( text, {
+    var geometry = new THREE.TextGeometry(textMesh, {
         font: font,
-        size: 80,
-        height: 20,
+        size: 120,
+        height: 40,
         curveSegments: 2
     });
 
     geometry.computeBoundingBox();
 
-    var centerOffset = -0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+    var centerOffset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+
     var materials = [
-        new THREE.MeshBasicMaterial( { color: 0x8B0000 , overdraw: 0.5 } ),
-        new THREE.MeshBasicMaterial( { color: 0x8B0000, overdraw: 0.5 } )
+        new THREE.MeshBasicMaterial({ color: 0xff0000, overdraw: 0.5 })
     ];
-    var text = new THREE.Mesh( geometry, materials );
 
-    text.position.x = centerOffset;
-    text.position.y = 0;
-    text.position.z = 0;
-    text.rotation.x = 0;
+    var textMesh = new THREE.Mesh(geometry, materials);
 
-    scene.add( text);
-    text_alert = text;
+    textMesh.position.x = centerOffset;
+    textMesh.position.y = 0;
+    textMesh.position.z = 0;
+    textMesh.rotation.x = 0;
+
+    text_alert = textMesh;
+    scene.add(textMesh);
 }
 
 function init(font) {
@@ -80,16 +81,9 @@ function init(font) {
 
     scene = new THREE.Scene();
 
-    var theText = " W R O N G ! ";
-    create_text(theText, font);
 
-
-
-
-
-
-
-
+    create_text(" N O  W A Y! ", font);
+    text_alert.position.x = -100000000;
 
 
     createSofa(scene);
@@ -145,7 +139,7 @@ function createSofa(scene) {
         y: 2,
         z: 4
     }
-    
+
     scene.add(meshSofa);
 
     /*STORE ORIGNAL SOFA POSITION */
@@ -248,17 +242,17 @@ function specialStairs(scene, stepThickness) {
 
     /*Corresponding walls */
 
-    let wall_height = (number_of_steps +1) * verticalStepHeight 
+    let wall_height = (number_of_steps + 1) * verticalStepHeight
 
-    var wall_l = new THREE.CubeGeometry(0, wall_height, ((number_of_steps / 2) * stepThickness ) + sideStepThickness);
+    var wall_l = new THREE.CubeGeometry(0, wall_height, ((number_of_steps / 2) * stepThickness) + sideStepThickness);
     wall_l_mesh = new THREE.Mesh(wall_l, material_wall);
 
     wall_l_x_offset = - stepWidth / 2;
     wall_l_y_offset = wall_height / 2 - verticalStepHeight / 2;
-    wall_l_z_offset = - ((number_of_steps / 2) * stepThickness) / 2 + stepThickness / 2  - sideStepThickness/2;
+    wall_l_z_offset = - ((number_of_steps / 2) * stepThickness) / 2 + stepThickness / 2 - sideStepThickness / 2;
 
     wall_l_mesh.geometry.translate(steps_x_start + wall_l_x_offset, steps_y_start + wall_l_y_offset, steps_z_start + wall_l_z_offset);
-    
+
     collidableMeshList.push(wall_l_mesh);
     scene.add(wall_l_mesh);
 
@@ -273,7 +267,7 @@ function specialStairs(scene, stepThickness) {
     wall_r_z_offset = - ((number_of_steps / 2) * stepThickness) / 2 + stepThickness / 2;
 
     wall_r_mesh.geometry.translate(steps_x_start + wall_r_x_offset, steps_y_start + wall_r_y_offset, steps_z_start + wall_r_z_offset);
-    
+
     collidableMeshList.push(wall_r_mesh);
     scene.add(wall_r_mesh);
 
@@ -284,12 +278,12 @@ function specialStairs(scene, stepThickness) {
     var wall_b = new THREE.CubeGeometry(wall_b_length, wall_height, 0);
     wall_b_mesh = new THREE.Mesh(wall_b, material_wall);
 
-    wall_b_x_offset = wall_b_length / 2 - (sideStepThickness /2);
+    wall_b_x_offset = wall_b_length / 2 - (sideStepThickness / 2);
     wall_b_y_offset = wall_height / 2 - verticalStepHeight / 2;
-    wall_b_z_offset = - ( ((number_of_steps / 2) -1)) * stepThickness  - (stepThickness / 2) - sideStepThickness;
+    wall_b_z_offset = - (((number_of_steps / 2) - 1)) * stepThickness - (stepThickness / 2) - sideStepThickness;
 
     wall_b_mesh.geometry.translate(steps_x_start + wall_b_x_offset, steps_y_start + wall_b_y_offset, steps_z_start + wall_b_z_offset);
-    
+
     collidableMeshList.push(wall_b_mesh);
     scene.add(wall_b_mesh);
 
@@ -301,12 +295,12 @@ function specialStairs(scene, stepThickness) {
     var wall_f = new THREE.CubeGeometry(wall_f_length, wall_height, 0);
     wall_f_mesh = new THREE.Mesh(wall_f, material_wall);
 
-    wall_f_x_offset = wall_f_length / 2 - (sideStepThickness /2)  + sideStepThickness;
+    wall_f_x_offset = wall_f_length / 2 - (sideStepThickness / 2) + sideStepThickness;
     wall_f_y_offset = wall_height / 2 - verticalStepHeight / 2;
-    wall_f_z_offset = - ( ((number_of_steps / 2) -1)) * stepThickness  - (stepThickness / 2) //- sideStepThickness;
+    wall_f_z_offset = - (((number_of_steps / 2) - 1)) * stepThickness - (stepThickness / 2) //- sideStepThickness;
 
     wall_f_mesh.geometry.translate(steps_x_start + wall_f_x_offset, steps_y_start + wall_f_y_offset, steps_z_start + wall_f_z_offset);
-    
+
     collidableMeshList.push(wall_f_mesh);
     scene.add(wall_f_mesh);
 
@@ -337,6 +331,8 @@ function moveObject(obj) {
 }
 
 
+
+var text_alert_ticker = 0;
 
 
 function animate() {
@@ -369,34 +365,45 @@ function animate() {
 
     /*COllision dection */
     //Source: http://stemkoski.github.io/Three.js/Collision-Detection.htmls
-	// collision detection:
-	//   determines if any of the rays from the cube's origin to each vertex
-	//		intersects any face of a mesh in the array of target meshes
-	//   for increased collision accuracy, add more vertices to the cube;
-	//		for example, new THREE.CubeGeometry( 64, 64, 64, 8, 8, 8, wireMaterial )
-	//   HOWEVER: when the origin of the ray is within the target mesh, collisions do not occur
-    
+    // collision detection:
+    //   determines if any of the rays from the cube's origin to each vertex
+    //		intersects any face of a mesh in the array of target meshes
+    //   for increased collision accuracy, add more vertices to the cube;
+    //		for example, new THREE.CubeGeometry( 64, 64, 64, 8, 8, 8, wireMaterial )
+    //   HOWEVER: when the origin of the ray is within the target mesh, collisions do not occur
+
     var originPoint = meshSofa.position.clone();
-	
-	for (var vertexIndex = 0; vertexIndex < meshSofa.geometry.vertices.length; vertexIndex++)
-	{		
-		var localVertex = meshSofa.geometry.vertices[vertexIndex].clone();
-		var globalVertex = localVertex.applyMatrix4( meshSofa.matrix );
-		var directionVector = globalVertex.sub( meshSofa.position );
-		
-		var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
-		var collisionResults = ray.intersectObjects( collidableMeshList );
-		if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
+
+    for (var vertexIndex = 0; vertexIndex < meshSofa.geometry.vertices.length; vertexIndex++) {
+        var localVertex = meshSofa.geometry.vertices[vertexIndex].clone();
+        var globalVertex = localVertex.applyMatrix4(meshSofa.matrix);
+        var directionVector = globalVertex.sub(meshSofa.position);
+
+        var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
+        var collisionResults = ray.intersectObjects(collidableMeshList);
+        if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
             console.log("HIT")
-            meshSofa.position = sofa_origin_position;
+
+
+            // meshSofa.position.x = sofa_origin_position.x;
+            // meshSofa.position.y = sofa_origin_position.y;
+            // meshSofa.position.z = sofa_origin_position.z;
+
+            var centerTextOffset = -0.5 * (text_alert.geometry.boundingBox.max.x - text_alert.geometry.boundingBox.min.x);
+
+            text_alert.position.x = centerTextOffset;
+            text_alert.lookAt( camera.position );
+
+        } else {
+            text_alert.position.x = -100000;
+
         }
-			
-	}	
+
+    }
 
 
 
-
-
+    
 
 
     controls.update();
