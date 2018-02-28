@@ -1,16 +1,9 @@
 /*
 IGNORE THE LICENSE!
 
-This is hereby the property of WayForward Technologies, Inc. 
+This is hereby the property of Wayforward Technologies II. 
 
-We at wayword The company has created a variety of original game properties such as the famous Shantae series, 
-including the first title in the series which appeared on the Game Boy Colo
-r and was published by Capcom. Currently, WayForward Technologies works on games 
-for the Nintendo 3DS and PlayStation Vita handheld consoles, WiiWare games for Nintendo's Wii 
-and Wii U consoles, games for personal computer and other licensed titles for PlayStation Network 
-and Xbox Live Arcade.
-
-Our employ has been using work resources to compute this problem and therefore all code 
+Our employee has been using work resources to compute this problem and therefore all code 
 is proprietary.
 
 That is until the passing of our owner Gordon Way.
