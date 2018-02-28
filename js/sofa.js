@@ -347,7 +347,12 @@ var moves_regession_rate = 0.98;
 
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
-  }
+}
+
+var angle = 0;
+var radius = 1000;
+
+
 
 function animate() {
     requestAnimationFrame(animate);
@@ -366,7 +371,7 @@ function animate() {
     } else {
 
         //Store current postion
-        move_history.push([meshSofa.rotation.clone(),meshSofa.position.clone()]);
+        move_history.push([meshSofa.rotation.clone(), meshSofa.position.clone()]);
 
         let spd = 0.4;
 
@@ -380,7 +385,7 @@ function animate() {
             x: getRandomArbitrary(-spd, spd),
             y: getRandomArbitrary(-spd, spd),
             z: getRandomArbitrary(-spd, 0)
-      }
+        }
 
         moveObject(meshSofa, direction);
 
@@ -396,9 +401,6 @@ function animate() {
     // wall_l_mesh.rotation.y -= 0.001;
     // wall_l_mesh.rotation.z -= 0.001;
 
-    camera.rotation.x -= 0.001;
-    camera.rotation.y -= 0.001;
-    camera.rotation.z -= 0.001;
 
     // wall_b_mesh.rotation.x -= 0.001;
     // wall_b_mesh.rotation.y -= 0.001;
@@ -437,23 +439,23 @@ function animate() {
 
             text_alert.position.x = centerTextOffset;
             text_alert.lookAt(camera.position);
-            
+
             /* dumping a copy of the moves */
 
             //Let's just remove the last 20 frames moves because who cares xD
 
             // console.log("Moves made: ", move_history.length)
-            if (move_history.length > 10){
-                let moves_to_remove =  Math.floor(move_history.length * moves_regession_rate );
-                console.log("Moves to remove: ",moves_to_remove)
+            if (move_history.length > 10) {
+                let moves_to_remove = Math.floor(move_history.length * moves_regession_rate);
 
-                let good_moves = move_history.slice(0,  move_history.length - moves_to_remove );
-                console.log("Good moves: ", good_moves.length)
+                let good_moves = move_history.slice(0, move_history.length - moves_to_remove);
                 moves_to_make = moves_to_make.concat(good_moves);
+                console.log("Moves to remove: ",moves_to_remove)
+                console.log("Good moves: ", good_moves.length)
                 console.log("Moves now going to make: ", moves_to_make.length)
                 current_move_to_make = 0;
             }
-            move_history = []; 
+            move_history = [];
 
 
 
@@ -466,10 +468,13 @@ function animate() {
     }
 
 
+    camera.position.x = radius * Math.cos(angle);
+    camera.position.y = radius * Math.sin(angle);
 
-
-
-
+    camera.position.z = radius * Math.sin(angle);
+    
+    angle += 0.001;
+ 
     controls.update();
     renderer.render(scene, camera);
 
