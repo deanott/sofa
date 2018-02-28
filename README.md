@@ -16,5 +16,5 @@ have got there.  Not without fundamental restructuring of the walls.  So, either
 #Dev Notes
 
 * Made just for fun, don't take the code here too seriously. Made so I didn't have to relookup at anything
-* Takes adavantage of Three.js[!https://threejs.org/] 
+* Takes adavantage of [Three.js](https://threejs.org) 
 * TODO: create fundamental_restructing_of_walls() + better silly success learning
