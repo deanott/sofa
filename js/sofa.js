@@ -30,23 +30,67 @@ var camera, scene, renderer;
 var controls;
 var geometry, material_steps, mesh;
 var cameraControls, effectController;
+var font;
 
+var text_alert = null;
 
 collidableMeshList = [];
 
 var sofa_origin_position;
 
-init();
-animate();
+var loader = new THREE.FontLoader();
+loader.load( 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_bold.typeface.json', function ( font ) {
+    init( font );
+    animate();
+} );
 
-function init() {
+function create_text(text, font) {
 
+	var geometry = new THREE.TextGeometry( text, {
+        font: font,
+        size: 80,
+        height: 20,
+        curveSegments: 2
+    });
+
+    geometry.computeBoundingBox();
+
+    var centerOffset = -0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+    var materials = [
+        new THREE.MeshBasicMaterial( { color: 0x8B0000 , overdraw: 0.5 } ),
+        new THREE.MeshBasicMaterial( { color: 0x8B0000, overdraw: 0.5 } )
+    ];
+    var text = new THREE.Mesh( geometry, materials );
+
+    text.position.x = centerOffset;
+    text.position.y = 0;
+    text.position.z = 0;
+    text.rotation.x = 0;
+
+    scene.add( text);
+    text_alert = text;
+}
+
+function init(font) {
+    font = font;
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = 1000;
 
     controls = new THREE.OrbitControls(camera);
 
     scene = new THREE.Scene();
+
+    var theText = " W R O N G ! ";
+    create_text(theText, font);
+
+
+
+
+
+
+
+
+
 
     createSofa(scene);
     specialStairs(scene, 87);
@@ -294,6 +338,7 @@ function moveObject(obj) {
 
 
 
+
 function animate() {
     requestAnimationFrame(animate);
     meshSofa.rotation.x += 0.005;
@@ -347,8 +392,6 @@ function animate() {
         }
 			
 	}	
-
-
 
 
 
