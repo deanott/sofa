@@ -87,9 +87,9 @@ function init(font) {
 
 
     createSofa(scene);
-    specialStairs(scene,20, 87);
+    specialStairs(scene, 20, 87);
 
-    
+
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -430,7 +430,7 @@ function animate() {
         var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
         var collisionResults = ray.intersectObjects(collidableMeshList);
         if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-            console.log("Hit")
+            // console.log("Hit")
 
             meshSofa.position.x = sofa_origin_position.x;
             meshSofa.position.y = sofa_origin_position.y;
@@ -451,9 +451,9 @@ function animate() {
 
                 let good_moves = move_history.slice(0, move_history.length - moves_to_remove);
                 moves_to_make = moves_to_make.concat(good_moves);
-                console.log("Moves to remove: ",moves_to_remove)
-                console.log("Good moves: ", good_moves.length)
-                console.log("Moves now going to make: ", moves_to_make.length)
+                // console.log("Moves to remove: ", moves_to_remove)
+                // console.log("Good moves: ", good_moves.length)
+                // console.log("Moves now going to make: ", moves_to_make.length)
                 current_move_to_make = 0;
             }
             move_history = [];
@@ -473,9 +473,9 @@ function animate() {
     camera.position.y = radius * Math.sin(angle);
 
     camera.position.z = radius * Math.sin(angle);
-    
+
     angle += 0.001;
- 
+
     controls.update();
     renderer.render(scene, camera);
 
