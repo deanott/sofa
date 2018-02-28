@@ -8,9 +8,9 @@ var axes = false;
 var ground = true;
 
 var worldSize = {
-    width: 500,
-    height: 500,
-    depth: 100
+    width: 250,
+    height: 250,
+    depth: 10
 
 }
 
@@ -31,6 +31,8 @@ var controls;
 var geometry, material_steps, mesh;
 var cameraControls, effectController;
 
+
+collidableMeshList = []
 
 
 init();
@@ -98,15 +100,12 @@ function createSofa(scene) {
         y: 2,
         z: 4
     }
-
+    
     scene.add(meshSofa);
 
 }
 
-function createWalls(scene, wallHeight, wallThickness, stepThickness) {
-    new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness);
 
-}
 
 function specialStairs(scene, stepThickness) {
     // MATERIALS
@@ -182,6 +181,8 @@ function specialStairs(scene, stepThickness) {
     }
 
     stepMesh = new THREE.Mesh(steps, material_steps);
+    collidableMeshList.push(stepMesh);
+
     //add mesh direction
     stepMesh.direction = {
         x: 0.01,
@@ -210,6 +211,8 @@ function specialStairs(scene, stepThickness) {
     wall_l_z_offset = - ((number_of_steps / 2) * stepThickness) / 2 + stepThickness / 2  - sideStepThickness/2;
 
     wall_l_mesh.geometry.translate(steps_x_start + wall_l_x_offset, steps_y_start + wall_l_y_offset, steps_z_start + wall_l_z_offset);
+    
+    collidableMeshList.push(wall_l_mesh);
     scene.add(wall_l_mesh);
 
 
@@ -223,6 +226,8 @@ function specialStairs(scene, stepThickness) {
     wall_r_z_offset = - ((number_of_steps / 2) * stepThickness) / 2 + stepThickness / 2;
 
     wall_r_mesh.geometry.translate(steps_x_start + wall_r_x_offset, steps_y_start + wall_r_y_offset, steps_z_start + wall_r_z_offset);
+    
+    collidableMeshList.push(wall_r_mesh);
     scene.add(wall_r_mesh);
 
 
@@ -237,6 +242,8 @@ function specialStairs(scene, stepThickness) {
     wall_b_z_offset = - ( ((number_of_steps / 2) -1)) * stepThickness  - (stepThickness / 2) - sideStepThickness;
 
     wall_b_mesh.geometry.translate(steps_x_start + wall_b_x_offset, steps_y_start + wall_b_y_offset, steps_z_start + wall_b_z_offset);
+    
+    collidableMeshList.push(wall_b_mesh);
     scene.add(wall_b_mesh);
 
 
@@ -252,6 +259,8 @@ function specialStairs(scene, stepThickness) {
     wall_f_z_offset = - ( ((number_of_steps / 2) -1)) * stepThickness  - (stepThickness / 2) //- sideStepThickness;
 
     wall_f_mesh.geometry.translate(steps_x_start + wall_f_x_offset, steps_y_start + wall_f_y_offset, steps_z_start + wall_f_z_offset);
+    
+    collidableMeshList.push(wall_f_mesh);
     scene.add(wall_f_mesh);
 
 
@@ -307,6 +316,40 @@ function animate() {
 
 
     //moveObject(stepMesh)
+
+
+    /*COllision dection */
+    //Source: http://stemkoski.github.io/Three.js/Collision-Detection.htmls
+	// collision detection:
+	//   determines if any of the rays from the cube's origin to each vertex
+	//		intersects any face of a mesh in the array of target meshes
+	//   for increased collision accuracy, add more vertices to the cube;
+	//		for example, new THREE.CubeGeometry( 64, 64, 64, 8, 8, 8, wireMaterial )
+	//   HOWEVER: when the origin of the ray is within the target mesh, collisions do not occur
+    
+    var originPoint = meshSofa.position.clone();
+	
+	for (var vertexIndex = 0; vertexIndex < meshSofa.geometry.vertices.length; vertexIndex++)
+	{		
+		var localVertex = meshSofa.geometry.vertices[vertexIndex].clone();
+		var globalVertex = localVertex.applyMatrix4( meshSofa.matrix );
+		var directionVector = globalVertex.sub( meshSofa.position );
+		
+		var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+		var collisionResults = ray.intersectObjects( collidableMeshList );
+		if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
+            console.log("HIT")
+        }
+			
+	}	
+
+
+
+
+
+
+
+
 
     controls.update();
     renderer.render(scene, camera);
