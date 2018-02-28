@@ -224,12 +224,6 @@ function specialStairs(scene, stepThickness) {
     stepMesh = new THREE.Mesh(steps, material_steps);
     collidableMeshList.push(stepMesh);
 
-    //add mesh direction
-    stepMesh.direction = {
-        x: 0.01,
-        y: 0.01,
-        z: 0.01
-    }
 
     var steps_x_start = -window.innerWidth / 2 + 200;
     var steps_y_start = -window.innerHeight / 2 + 100;
@@ -308,10 +302,10 @@ function specialStairs(scene, stepThickness) {
 
 }
 
-function moveObject(obj) {
-    obj.position.x += obj.direction.x;
-    obj.position.y += obj.direction.y;
-    obj.position.z += obj.direction.z;
+function moveObject(obj, direction) {
+    obj.position.x += direction.x;
+    obj.position.y += direction.y;
+    obj.position.z += direction.z;
     // if edge is reached, bounce back
     if (obj.position.x < -worldSize.width + sofaSize.width / 2 ||
         obj.position.x > worldSize.width - sofaSize.width / 2) {
@@ -344,19 +338,53 @@ function sleep(milliseconds) {
 
 var text_alert_ticker = 0;
 
+var current_move_to_make = 1;
+var moves_to_make = [];
 
-var history_of_moves = []
+var moves_regession_rate = 5 * 60;
 
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+  }
 
 function animate() {
     requestAnimationFrame(animate);
-    meshSofa.rotation.x += 0.005;
-    meshSofa.rotation.y += 0.01;
-    meshSofa.rotation.z += 0.02;
-    moveObject(meshSofa);
+
+
+    if (moves_to_make.length > current_move_to_make) {
+        console.log("Makeing moves: ", moves_to_make[current_move_to_make][0],  moves_to_make[current_move_to_make][1]);
+
+        meshSofa.rotation = moves_to_make[current_move_to_make][0]
+        moveObject(meshSofa, moves_to_make[current_move_to_make][1])
+
+        current_move_to_make = current_move_to_make + 1;
+        
+
+    } else {
+
+        console.log(current_move_to_make)
+        //Store current postion
+        moves_to_make.push([meshSofa.rotation.clone(),meshSofa.position.clone()]);
+
+        let spd = 0.2;
+        
+        meshSofa.rotation.x += getRandomArbitrary(0.5,-0.5);
+        meshSofa.rotation.y += getRandomArbitrary(0.5,-0.5);
+        meshSofa.rotation.z += getRandomArbitrary(0.5,-0.5);
+
+
+        //add mesh direction
+        direction = {
+            x: getRandomArbitrary(-spd, spd),
+            y: getRandomArbitrary(-spd, spd),
+            z: getRandomArbitrary(-spd, spd)
+      }
+
+        moveObject(meshSofa, direction);
+
+    }
 
     //Gulp store that history for deep learning feed
-    history_of_moves.push({"rotation":meshSofa.rotation}, {"position": meshSofa.position })
     // console.log(history_of_moves)
     // stepMesh.rotation.x -= 0.001;
     // stepMesh.rotation.y -= 0.001;
@@ -404,12 +432,20 @@ function animate() {
 
             text_alert.position.x = centerTextOffset;
             text_alert.lookAt(camera.position);
-           
-         
-            // meshSofa.position.x = sofa_origin_position.x;
-            // meshSofa.position.y = sofa_origin_position.y;
-            // meshSofa.position.z = sofa_origin_position.z;
             
+            /* dumping a copy of the moves */
+
+            //Let's just remove the last 20 frames moves because who cares xD
+
+
+            if (moves_to_make.length >moves_regession_rate) moves_to_make = moves_to_make.slice(0, moves_to_make.length - moves_regession_rate);
+
+           
+            meshSofa.position.x = sofa_origin_position.x;
+            meshSofa.position.y = sofa_origin_position.y;
+            meshSofa.position.z = sofa_origin_position.z;
+            current_move_to_make = 0;
+
 
         } else {
             text_alert.position.x = -100000;
