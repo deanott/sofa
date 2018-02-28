@@ -225,7 +225,7 @@ function specialStairs(scene, stepThickness) {
     collidableMeshList.push(stepMesh);
 
 
-    var steps_x_start = -window.innerWidth / 2 + 200;
+    var steps_x_start = -window.innerWidth / 2 + 200;  //+ 200;
     var steps_y_start = -window.innerHeight / 2 + 100;
     var steps_z_start = -170
 
@@ -339,9 +339,11 @@ function sleep(milliseconds) {
 var text_alert_ticker = 0;
 
 var current_move_to_make = 1;
+
+var move_history = [];
 var moves_to_make = [];
 
-var moves_regession_rate = 5 * 60;
+var moves_regession_rate = 0.98;
 
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
@@ -352,32 +354,32 @@ function animate() {
 
 
     if (moves_to_make.length > current_move_to_make) {
-        console.log("Makeing moves: ", moves_to_make[current_move_to_make][0],  moves_to_make[current_move_to_make][1]);
+        // console.log("Makeing moves: ", moves_to_make[current_move_to_make][0],  moves_to_make[current_move_to_make][1]);
+        // console.log("Move on: ",current_move_to_make );
+        // console.log("Total moves: ",moves_to_make.length  )
 
         meshSofa.rotation = moves_to_make[current_move_to_make][0]
         moveObject(meshSofa, moves_to_make[current_move_to_make][1])
 
         current_move_to_make = current_move_to_make + 1;
-        
 
     } else {
 
-        console.log(current_move_to_make)
         //Store current postion
-        moves_to_make.push([meshSofa.rotation.clone(),meshSofa.position.clone()]);
+        move_history.push([meshSofa.rotation.clone(),meshSofa.position.clone()]);
 
-        let spd = 0.2;
-        
-        meshSofa.rotation.x += getRandomArbitrary(0.5,-0.5);
-        meshSofa.rotation.y += getRandomArbitrary(0.5,-0.5);
-        meshSofa.rotation.z += getRandomArbitrary(0.5,-0.5);
+        let spd = 0.4;
+
+        meshSofa.rotation.x += getRandomArbitrary(-spd, spd);
+        meshSofa.rotation.y += getRandomArbitrary(-spd, spd);
+        meshSofa.rotation.z += getRandomArbitrary(-spd, spd);
 
 
         //add mesh direction
         direction = {
             x: getRandomArbitrary(-spd, spd),
             y: getRandomArbitrary(-spd, spd),
-            z: getRandomArbitrary(-spd, spd)
+            z: getRandomArbitrary(-spd, 0)
       }
 
         moveObject(meshSofa, direction);
@@ -394,9 +396,9 @@ function animate() {
     // wall_l_mesh.rotation.y -= 0.001;
     // wall_l_mesh.rotation.z -= 0.001;
 
-    // wall_r_mesh.rotation.x -= 0.001;
-    // wall_r_mesh.rotation.y -= 0.001;
-    // wall_r_mesh.rotation.z -= 0.001;
+    camera.rotation.x -= 0.001;
+    camera.rotation.y -= 0.001;
+    camera.rotation.z -= 0.001;
 
     // wall_b_mesh.rotation.x -= 0.001;
     // wall_b_mesh.rotation.y -= 0.001;
@@ -425,8 +427,11 @@ function animate() {
         var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
         var collisionResults = ray.intersectObjects(collidableMeshList);
         if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-            console.log("HIT")
+            console.log("Hit")
 
+            meshSofa.position.x = sofa_origin_position.x;
+            meshSofa.position.y = sofa_origin_position.y;
+            meshSofa.position.z = sofa_origin_position.z;
 
             var centerTextOffset = -0.5 * (text_alert.geometry.boundingBox.max.x - text_alert.geometry.boundingBox.min.x);
 
@@ -437,14 +442,20 @@ function animate() {
 
             //Let's just remove the last 20 frames moves because who cares xD
 
+            // console.log("Moves made: ", move_history.length)
+            if (move_history.length > 10){
+                let moves_to_remove =  Math.floor(move_history.length * moves_regession_rate );
+                console.log("Moves to remove: ",moves_to_remove)
 
-            if (moves_to_make.length >moves_regession_rate) moves_to_make = moves_to_make.slice(0, moves_to_make.length - moves_regession_rate);
+                let good_moves = move_history.slice(0,  move_history.length - moves_to_remove );
+                console.log("Good moves: ", good_moves.length)
+                moves_to_make = moves_to_make.concat(good_moves);
+                console.log("Moves now going to make: ", moves_to_make.length)
+                current_move_to_make = 0;
+            }
+            move_history = []; 
 
-           
-            meshSofa.position.x = sofa_origin_position.x;
-            meshSofa.position.y = sofa_origin_position.y;
-            meshSofa.position.z = sofa_origin_position.z;
-            current_move_to_make = 0;
+
 
 
         } else {
