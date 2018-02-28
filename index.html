@@ -2,7 +2,7 @@
 <html>
 
 <head>
-		<script src="http://threejs.org/build/three.min.js"></script>
+	<script src="http://threejs.org/build/three.min.js"></script>
 
 	<meta charset=utf-8>
 	<title>Sofa Bend Reality</title>
@@ -10,11 +10,38 @@
 		body {
 			margin: 0;
 			overflow: hidden;
+			font: courier;
+			background-color:#000000 ;
 		}
 
 		canvas {
 			width: 100%;
 			height: 100%
+		}
+
+		#overlay {
+			position: fixed;
+			display: none;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: rgba(0, 0, 0, 0.5);
+			z-index: 2;
+			cursor: pointer;
+		}
+
+		#text {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			font-size: 1.5em;
+			text-align: center;
+			color: white;
+			transform: translate(-50%, -50%);
+			-ms-transform: translate(-50%, -50%);
 		}
 	</style>
 </head>
@@ -22,6 +49,30 @@
 <body>
 	<script src="js/OrbitControls.js"></script>
 	<script src="js/sofa.js"></script>
+
+
+	<div id="overlay" onclick="off()">
+		<div id="text"> Would it not be really useful to know before you buy a piece of furniture whether it’s actually going to fit up the stairs
+			or around the corner. So I’ve modelled the problem in three dimensions on my computer and so far it just says no way.
+			That it can’t be done. I told it to compute the moves necessary to get the sofa out, and it said there aren’t any. I said
+			“What?” and it said there aren’t any. I then asked it, and this is the really mysterious thing, to compute the moves necessary
+			to get the sofa into its present position in the first place, and it said that it have got there. Not without fundamental
+			restructuring of the walls. So, either there’s something wrong with the fundamental structure of the matter in my walls
+			or there’s something wrong with the program. Which would you guess?</div>
+	</div>
+
+	<button onclick="on()"> ?</button>
+
+	<script>
+		function on() {
+			document.getElementById("overlay").style.display = "block";
+		}
+
+		function off() {
+			document.getElementById("overlay").style.display = "none";
+		}
+	</script>
+	
 </body>
 
 </html>
