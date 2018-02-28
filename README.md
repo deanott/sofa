@@ -11,3 +11,9 @@ have got there.  Not without fundamental restructuring of the walls.  So, either
 ### Reference:
 
 * *Adams, D. (1988) Dirk gently’s holistic detective agency. London: Pan Books in association with Heinemann.*
+
+
+#Dev Notes
+
+* Made just for fun, don't take the code here too seriously. Made so I didn't have to relookup at anything
+* Takes adavantage of Three.js[!https://threejs.org/] 
