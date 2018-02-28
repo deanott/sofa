@@ -87,7 +87,9 @@ function init(font) {
 
 
     createSofa(scene);
-    specialStairs(scene, 87);
+    specialStairs(scene,20, 87);
+
+    
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -148,7 +150,7 @@ function createSofa(scene) {
 
 
 
-function specialStairs(scene, stepThickness) {
+function specialStairs(scene, number_of_steps, stepThickness) {
     // MATERIALS
 
     material_steps = new THREE.MeshBasicMaterial({
@@ -175,7 +177,6 @@ function specialStairs(scene, stepThickness) {
     var offsetY = 0;
     var offsetZ = 0;
 
-    var number_of_steps = 20;
     //Vertical stairs
     for (var i = 0; i < number_of_steps / 2; i++) {
         var stepVertical = new THREE.CubeGeometry(stepWidth, verticalStepHeight, stepThickness);
